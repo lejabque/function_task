@@ -34,7 +34,8 @@ struct storage {
 
   storage& operator=(storage&& other) noexcept {
     if (this != &other) {
-      storage(std::move(other)).swap(*this);
+      desc->destroy(this);
+      other.desc->move(&other, this);
     }
     return *this;
   }
@@ -62,7 +63,6 @@ struct storage {
   template<typename T>
   T* get_dynamic() const noexcept {
     return *reinterpret_cast<T* const*>(&buf);
-    // return *static_cast<T* const*>(reinterpret_cast<void const*>(&buf)); // is it better?
   }
 
   void set_dynamic(void* value) noexcept {
@@ -87,6 +87,9 @@ struct storage {
     if (function_traits<T>::template get_type_descriptor<R, Args...>() != desc) {
       return nullptr;
     }
+//    if (desc == empty_type_descriptor<R, Args...>()) {
+//      return nullptr;
+//    }
     if constexpr (fits_small_storage<T>) {
       return get_static<T>();
     } else {

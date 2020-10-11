@@ -114,7 +114,6 @@ struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
         // move
         [](storage_t* src, storage_t* dest) noexcept {
           dest->set_dynamic(src->template get_dynamic<T>());
-          src->set_dynamic(nullptr);
           dest->desc = src->desc;
           src->desc = empty_type_descriptor<R, Args...>();
         },
@@ -125,8 +124,6 @@ struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
         // destroy
         [](storage_t* src) {
           delete src->template get_dynamic<T>();
-          src->set_dynamic(nullptr);
-          src->desc = empty_type_descriptor<R, Args...>();
         }
     };
 
