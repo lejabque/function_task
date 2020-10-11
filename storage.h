@@ -65,12 +65,6 @@ struct storage {
     // return *static_cast<T* const*>(reinterpret_cast<void const*>(&buf)); // is it better?
   }
 
-  template<typename T>
-  T* get_dynamic() noexcept {
-    return *reinterpret_cast<T**>(&buf);
-    // return *static_cast<T**>(reinterpret_cast<void*>(&buf)); // is it better?
-  }
-
   void set_dynamic(void* value) noexcept {
     reinterpret_cast<void*&>(buf) = value;
   }
