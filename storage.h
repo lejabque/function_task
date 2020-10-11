@@ -87,9 +87,6 @@ struct storage {
     if (function_traits<T>::template get_type_descriptor<R, Args...>() != desc) {
       return nullptr;
     }
-//    if (desc == empty_type_descriptor<R, Args...>()) {
-//      return nullptr;
-//    }
     if constexpr (fits_small_storage<T>) {
       return get_static<T>();
     } else {
