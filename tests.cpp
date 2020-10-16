@@ -104,8 +104,6 @@ TEST(function_test, small_func_assignment_operator)
 {
     function<int ()> f = small_func(42);
     function<int ()> g;
-    swap(f, g);
-    swap(f, g);
     g = f;
     EXPECT_EQ(42, g());
 }
