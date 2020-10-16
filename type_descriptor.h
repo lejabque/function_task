@@ -135,4 +135,4 @@ struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
     return &impl;
   }
 };
-}
+} // namespace function_utils

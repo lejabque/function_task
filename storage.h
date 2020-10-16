@@ -109,4 +109,4 @@ struct storage {
   inplace_buffer buf;
   type_descriptor<R, Args...> const* desc;
 };
-}
+} // namespace function_utils
