@@ -38,6 +38,15 @@ struct function<R(Args...)> {
     return func_storage.template target<T>();
   }
 
+  void swap(function& other) noexcept {
+    using std::swap;
+    swap(func_storage, other.func_storage);
+  }
+
+  friend void swap(function& src, function& other) noexcept {
+    src.swap(other);
+  }
+
  private:
   storage<R, Args...> func_storage;
 };

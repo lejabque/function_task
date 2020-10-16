@@ -25,6 +25,12 @@ struct storage {
     other.desc->move(&other, this);
   }
 
+  void swap(storage& other) noexcept {
+    auto t = std::move(*this);
+    *this = std::move(other);
+    other = std::move(t);
+  }
+
   storage& operator=(storage const& other) {
     if (this != &other) {
       storage(other).swap(*this);
@@ -38,12 +44,6 @@ struct storage {
       other.desc->move(&other, this);
     }
     return *this;
-  }
-
-  void swap(storage& other) noexcept {
-    auto t = std::move(*this);
-    *this = std::move(other);
-    other = std::move(t);
   }
 
   ~storage() {
@@ -99,6 +99,10 @@ struct storage {
 
   template<typename U, typename E> friend
   struct function_traits;
+
+  friend void swap(storage<R, Args...>& src, storage<R, Args...>& other) noexcept {
+    src.swap(other);
+  }
 
  private:
   inplace_buffer buf;
