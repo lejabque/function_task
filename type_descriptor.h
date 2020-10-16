@@ -28,9 +28,9 @@ struct type_descriptor {
   using storage_t = storage<R, Args...>;
 
   void (* copy)(storage_t const* src, storage_t* dest);
-  void (* move)(storage_t* src, storage_t* dest);
+  void (* move)(storage_t* src, storage_t* dest) noexcept;
   R (* invoke)(storage_t const* src, Args...);
-  void (* destroy)(storage_t*);
+  void (* destroy)(storage_t*) noexcept;
 };
 
 template<typename R, typename... Args>
