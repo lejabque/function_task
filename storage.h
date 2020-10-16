@@ -41,9 +41,9 @@ struct storage {
   }
 
   void swap(storage& other) noexcept {
-    using std::swap;
-    swap(buf, other.buf);
-    swap(desc, other.desc);
+    auto t = std::move(*this);
+    *this = std::move(other);
+    other = std::move(t);
   }
 
   ~storage() {
