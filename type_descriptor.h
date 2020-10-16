@@ -39,16 +39,20 @@ type_descriptor<R, Args...> const* empty_type_descriptor() {
 
   constexpr static type_descriptor<R, Args...> impl =
       {
+          // copy
           [](storage_t const* src, storage_t* dest) {
             dest->desc = src->desc;
           },
-          [](storage_t* src, storage_t* dest) {
+          // move
+          [](storage_t* src, storage_t* dest) noexcept {
             dest->desc = std::move(src->desc);
           },
+          // invoke
           [](storage_t const* src, Args...) -> R {
             throw bad_function_call();
           },
-          [](storage_t*) {}
+          // destroy
+          [](storage_t*) noexcept {}
       };
 
   return &impl;
@@ -85,7 +89,7 @@ struct function_traits<T, std::enable_if_t<fits_small_storage<T>>> {
           return (*src->template get_static<T>())(std::forward<Args>(args)...);
         },
         // destroy
-        [](storage_t* src) {
+        [](storage_t* src) noexcept {
           src->template get_static<T>()->~T();
           src->desc = empty_type_descriptor<R, Args...>();
         }
@@ -123,7 +127,7 @@ struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
           return (*src->template get_dynamic<T>())(std::forward<Args>(args)...);
         },
         // destroy
-        [](storage_t* src) {
+        [](storage_t* src) noexcept {
           delete src->template get_dynamic<T>();
         }
     };
