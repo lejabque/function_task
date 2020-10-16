@@ -1,23 +1,24 @@
 #pragma once
 #include <exception>
 
-template<typename R, typename... Args>
-struct storage;
-
 struct bad_function_call : std::exception {
   char const* what() const noexcept override {
     return "bad function call";
   }
 };
 
-constexpr static size_t INPLACE_BUFFER_SIZE = sizeof(void*);
-constexpr static size_t INPLACE_BUFFER_ALIGNMENT = alignof(void*);
+namespace function_utils {
+template<typename R, typename... Args>
+struct storage;
+
+constexpr size_t INPLACE_BUFFER_SIZE = sizeof(void*);
+constexpr size_t INPLACE_BUFFER_ALIGNMENT = alignof(void*);
 using inplace_buffer = std::aligned_storage_t<
     INPLACE_BUFFER_SIZE,
     INPLACE_BUFFER_ALIGNMENT>;
 
 template<typename T>
-constexpr static bool fits_small_storage =
+constexpr bool fits_small_storage =
     sizeof(T) <= INPLACE_BUFFER_SIZE
         && INPLACE_BUFFER_ALIGNMENT % alignof(T) == 0
         && std::is_nothrow_move_constructible<T>::value;
@@ -130,3 +131,4 @@ struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
     return &impl;
   }
 };
+}

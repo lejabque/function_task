@@ -48,5 +48,5 @@ struct function<R(Args...)> {
   }
 
  private:
-  storage<R, Args...> func_storage;
+  function_utils::storage<R, Args...> func_storage;
 };

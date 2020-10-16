@@ -4,6 +4,7 @@
 #include <cstddef>
 #include "type_descriptor.h"
 
+namespace function_utils {
 template<typename R, typename... Args>
 struct storage {
   storage() noexcept
@@ -108,3 +109,4 @@ struct storage {
   inplace_buffer buf;
   type_descriptor<R, Args...> const* desc;
 };
+}
