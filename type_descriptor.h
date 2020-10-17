@@ -103,7 +103,7 @@ template<typename T>
 struct function_traits<T, std::enable_if_t<!fits_small_storage<T>>> {
   template<typename R, typename... Args>
   static void initialize_storage(storage<R, Args...>& src, T&& obj) {
-    src.set_dynamic(new T(std::move(obj)));
+    src.set_dynamic(new T(std::forward<T>(obj)));
   }
 
   template<typename R, typename... Args>

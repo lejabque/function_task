@@ -14,9 +14,9 @@ struct function<R(Args...)> {
   function& operator=(function const& rhs) = default;
   function& operator=(function&& rhs) noexcept = default;
 
-  template<typename T>
-  function(T val)
-      : func_storage(std::move(val)) {}
+  template<typename T, std::enable_if_t<!std::is_same_v<function, std::decay_t<T>>, bool> = true>
+  function(T&& val)
+      : func_storage(std::forward<T>(val)) {}
 
   ~function() = default;
 

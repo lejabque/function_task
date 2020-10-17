@@ -11,11 +11,11 @@ struct storage {
       : buf(),
         desc(empty_type_descriptor<R, Args...>()) {}
 
-  template<typename T>
-  storage(T val)
+  template<typename T, std::enable_if_t<!std::is_same_v<storage, std::decay_t<T>>, bool> = true>
+  storage(T&& val)
       :  buf(),
-         desc(function_traits<T>::template get_type_descriptor<R, Args...>()) {
-    function_traits<T>::initialize_storage(*this, std::move(val));
+         desc(function_traits<std::remove_reference_t<T>>::template get_type_descriptor<R, Args...>()) {
+    function_traits<std::remove_reference_t<T>>::initialize_storage(*this, std::forward<T>(val));
   }
 
   storage(storage const& other) {
